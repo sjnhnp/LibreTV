@@ -1207,14 +1207,14 @@ function playVideo(encodedUrl, encodedVodName, episodeIndex) {
 
     
     // 构建播放页面URL，传递必要参数
-    const playerUrl = `player.html?url=${encodeURIComponent(url)}&title=${encodeURIComponent(videoTitle)}&index=${episodeIndex}&source=${encodeURIComponent(sourceName)}`;
+    //const playerUrl = `player.html?url=${encodeURIComponent(url)}&title=${encodeURIComponent(videoTitle)}&index=${episodeIndex}&source=${encodeURIComponent(sourceName)}`;
     
     // 在新标签页中打开播放页面
     window.location.href = playerUrl;
 
 
     // Construct player URL with necessary parameters
-    const playerUrl = `player.html?url=${encodeURIComponent(url)}&title=${encodeURIComponent(vodName)}&index=${episodeIndex}&source=${encodeURIComponent(sourceName)}`;
+    //const playerUrl = `player.html?url=${encodeURIComponent(url)}&title=${encodeURIComponent(vodName)}&index=${episodeIndex}&source=${encodeURIComponent(sourceName)}`;
 
     // Open in new tab
     window.open(playerUrl, '_blank', 'noopener,noreferrer'); // Added security attributes
