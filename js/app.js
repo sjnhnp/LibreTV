@@ -652,6 +652,86 @@ document.querySelectorAll('form').forEach(form => {
     // …实际部署时若发现特殊兼容问题可在此加特殊兼容补丁
 })();
 
+
+// ================ 全局错误兜底处理（防止窗口无响应） ================
+window.addEventListener('error', function(e) {
+    showToast("页面发生异常：" + (e && e.message ? e.message : '未知错误'), 'error', 4000);
+}, true);
+
+window.addEventListener('unhandledrejection', function(e) {
+    showToast("网络接口异常：" + (e && e.reason ? e.reason : '未知异常'), 'error', 4000);
+}, true);
+
+// =============== 页面离开时数据清理（可选） ===============
+window.addEventListener('beforeunload', function() {
+    // 若无需清理可留空；如仅临时保存数据、loading状态可在此释放
+});
+
+// ================ 帮助弹窗和使用说明（可选实现） =================
+function showHelpDialog() {
+    const helpDialog = document.getElementById("helpDialog");
+    if (!helpDialog) {
+        alert("如需帮助信息，请参见站点说明或官方文档。");
+        return;
+    }
+    helpDialog.style.display = 'block';
+    helpDialog.innerHTML = `
+        <div class="p-4">
+            <h2 class="font-bold text-lg mb-2">使用说明</h2>
+            <ul class="list-disc list-inside text-sm mb-3">
+                <li>请选择你信任的视频资源站点，可以多选。</li>
+                <li>如需添加自定义源，请点击“添加自定义API”，输入正确地址。</li>
+                <li>关闭或开启“过滤成人视频”，结果会随之改变。</li>
+                <li>点击搜索结果进入详情，可选择集数播放。</li>
+                <li>如遇网站无响应或资源全部失效，建议多换几个API或清理浏览器缓存。</li>
+                <li>本站点所有资源均为第三方资源站，仅供测试学习。</li>
+            </ul>
+            <div class="flex justify-end">
+                <button onclick="document.getElementById('helpDialog').style.display='none'" class="btn btn-secondary">关闭</button>
+            </div>
+        </div>
+    `;
+}
+
+// =============== 可选：加载动画工具 ===============
+function showLoading(mask=true) {
+    let el = document.getElementById('globalLoading');
+    if (!el) {
+        el = document.createElement('div');
+        el.id = 'globalLoading';
+        el.style.position = 'fixed';
+        el.style.left = '0'; el.style.right = '0';
+        el.style.top = '0';  el.style.bottom = '0';
+        el.style.background = 'rgba(0,0,0,0.3)';
+        el.style.display = 'flex';
+        el.style.alignItems = 'center';
+        el.style.justifyContent = 'center';
+        el.style.zIndex = '99999';
+        el.innerHTML = '<div style="background:#222;color:#fff;padding:18px 32px;border-radius:10px">加载中...</div>';
+        document.body.appendChild(el);
+    }
+    el.style.display = mask ? 'flex' : 'none';
+}
+function hideLoading() {
+    const el = document.getElementById('globalLoading');
+    if (el) el.style.display = 'none';
+}
+
+// =============== 绑定全局帮助按钮/快捷键 ===============
+(function(){
+    const helpBtn = document.getElementById("helpBtn");
+    if (helpBtn) helpBtn.onclick = showHelpDialog;
+    // Alt+H 弹出帮助
+    document.addEventListener('keydown', function(e){
+        if (e.altKey && (e.key === "h" || e.key === "H")) {
+            showHelpDialog();
+        }
+    });
+})();
+
+// =============== END ALL ===============
+
+
 // =================== END ======================
 
 // 你的 Cloudflare Pages 前端主控脚本到此收尾。
